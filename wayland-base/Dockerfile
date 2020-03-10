@@ -1,5 +1,5 @@
 ARG IMAGE_ARCH=arm32v7
-FROM torizon/$IMAGE_ARCH-debian-base:buster
+FROM gustavsl/debian-base:bullseye
 
 RUN apt-get -y update && apt-get install -y --no-install-recommends \
     apt-utils \

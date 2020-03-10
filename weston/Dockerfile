@@ -1,6 +1,6 @@
-ARG IMAGE_ARCH=arm32v7
-ARG BASE_NAME=$IMAGE_ARCH-debian-wayland-base
-FROM torizon/$BASE_NAME:buster
+ARG IMAGE_ARCH=arm64v8
+ARG BASE_NAME=debian-wayland-base
+FROM gustavsl/$BASE_NAME:buster
 
 RUN apt-get -y update && apt-get install -y --no-install-recommends\
     apt-utils \
