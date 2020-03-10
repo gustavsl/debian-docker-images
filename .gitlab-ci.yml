@@ -82,6 +82,13 @@ docker-build-shell:
     DOCKERFILE_FOLDER: "shell/"
   stage: build-stage1
 
+docker-build-compose:
+  extends: .docker-build
+  variables:
+    BASE_NAME: arm32v7-debian-base
+    IMAGE_NAME: arm32v7-debian-docker-compose
+    DOCKERFILE_FOLDER: "docker-compose/"
+  stage: build-stage1
 
 docker-build-qt5-wayland:
   extends: .docker-build
@@ -130,6 +137,23 @@ docker-build-weston-vivante-arm64v8:
     DOCKER_NO_CACHE: ${DOCKER_NO_CACHE_VIVANTE}
   stage: build-stage2
 
+docker-build-shell-arm64v8:
+  extends: .docker-build
+  variables:
+    BASE_NAME: arm64v8-debian-base
+    IMAGE_NAME: arm64v8-debian-shell
+    DOCKERFILE_FOLDER: "shell/"
+  stage: build-stage1
+
+docker-build-compose-arm64v8:
+  extends: .docker-build
+  variables:
+    IMAGE_ARCH: arm64v8
+    BASE_NAME: arm64v8-debian-base
+    IMAGE_NAME: arm64v8-debian-docker-compose
+    DOCKERFILE_FOLDER: "docker-compose/"
+  stage: build-stage1
+
 docker-build-qt5-wayland-arm64v8:
   extends: .docker-build
   variables:
@@ -155,7 +179,7 @@ docker-build-qt5-wayland-vivante-arm64v8:
 # specific Gitlab CI settings.
 .docker-deploy:
   variables:
-    DOCKER_TAGS: "buster 10 10.1 latest"
+    DOCKER_TAGS: "buster 10 10.3 latest"
   before_script:
     - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PW
   stage: deploy
@@ -166,7 +190,7 @@ docker-build-qt5-wayland-vivante-arm64v8:
   # new date tags when pushing the same container again.
   - export TIMESTAMP=$(docker inspect -f '{{ .Created }}' ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${GITLAB_DOCKERREGISTRY_SUFFIX})
   - export DATE_TAG=$(date '+%Y%m%d' -d ${TIMESTAMP} -D '%Y-%m-%dT%H:%M:%S')
-  - export DOCKER_TAGS="$DOCKER_TAGS $DATE_TAG"
+  - export DOCKER_TAGS="$DOCKER_TAGS buster-$DATE_TAG"
   - for tag in ${DOCKER_TAGS};
     do
       docker tag ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${GITLAB_DOCKERREGISTRY_SUFFIX} ${DOCKER_HUB_REPOSITORY}/${IMAGE_NAME}:${tag};
@@ -193,6 +217,11 @@ docker-deploy-shell:
   variables:
     IMAGE_NAME: arm32v7-debian-shell
 
+docker-deploy-docker-compose:
+  extends: .docker-deploy
+  variables:
+    IMAGE_NAME: arm32v7-debian-docker-compose
+
 docker-deploy-qt5-wayland:
   extends: .docker-deploy
   variables:
@@ -217,6 +246,16 @@ docker-deploy-weston-vivante-arm64v8:
   extends: .docker-deploy
   variables:
     IMAGE_NAME: arm64v8-debian-weston-vivante
+
+docker-deploy-shell-arm64v8:
+  extends: .docker-deploy
+  variables:
+    IMAGE_NAME: arm64v8-debian-shell
+
+docker-deploy-docker-compose-arm64v8:
+  extends: .docker-deploy
+  variables:
+    IMAGE_NAME: arm64v8-debian-docker-compose
 
 docker-deploy-qt5-wayland-arm64v8:
   extends: .docker-deploy
