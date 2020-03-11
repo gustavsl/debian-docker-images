@@ -1,6 +1,6 @@
-ARG IMAGE_ARCH=arm64v8
+ARG IMAGE_ARCH=arm32v7
 ARG BASE_NAME=debian-wayland-base
-FROM gustavsl/$BASE_NAME:buster
+FROM gustavsl/$BASE_NAME:bullseye
 
 RUN apt-get -y update && apt-get install -y --no-install-recommends \
     weston \

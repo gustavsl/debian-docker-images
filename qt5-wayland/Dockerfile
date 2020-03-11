@@ -9,11 +9,13 @@ RUN apt-get -y update && apt-get install -y --no-install-recommends \
 
 RUN apt-get -y update && apt-get install -y --no-install-recommends \
     qtwayland5 \
-    qml-module-qtquick-controls2 \
-    qml-module-qtquick-layouts \
-    qml-module-qtquick2 \
+    # qml-module-qtquick-controls2 \
+    # qml-module-qtquick-layouts \
+    # qml-module-qtquick2 \
+    # qml-module-qtquick-window2 \
+    # qml-module-qt-labs-settings \
     qtbase5-examples \
     && apt-get clean && apt-get autoremove && rm -rf /var/lib/apt/lists/*
 
-
 ENV QT_QPA_PLATFORM="wayland"
+
